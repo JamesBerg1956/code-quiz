@@ -5,7 +5,7 @@ var timeSpan = document.getElementById("timeSpan");
 var gameStartContainer = document.getElementById("gameStartContainer");
 var startQuizBtn = document.getElementById("startQuizBtn");
 var quizContainer = document.getElementById("quizContainer");
-var QuestionH2 = document.getElementById("QuestionH2");
+var questionH2 = document.getElementById("questionH2");
 var quizList = document.getElementById("quizList");
 var answerFeedback = document.getElementById("answerFeedback");
 var gameEndContainer = document.getElementById("gameEndContainer");
@@ -26,64 +26,339 @@ var secondsLeft = 60;
 var score = 0;
 
 //Declare quiz arrQuizQuestions object array
+var arrQuizQuestions = [
+    {
+        question: "Inside which html element do we put the Javascript?",
+        answers: 
+        [
+            {
+                answerNum: 1, answer: "&ltscripting&gt",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 2, answer: "&ltjs&gt",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 3, answer: "&ltscript&gt",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            },
+            {
+                answerNum: 4, answer: "&ltjavascript&gt", 
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            }
+        ]
+    },
+    {
+        question: "Where is the correct place to insert a JavaScript?",
+        answers:
+        [
+            {
+                answerNum: 1, answer: "The &ltbody&gt section",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 2, answer: "The &lthead&gt section",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 3, answer: "Both are correct",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            }
+        ]
+    },
+    {
+        question: "What is the correct syntax for referring to an external script called \"xxx.js\"?",
+        answers:
+        [
+            {
+                answerNum: 1, answer: "&ltscript name=\"xxx.js\"&gt",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 2, answer: "&ltscript src=\"xxx.js\"&gt",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            },
+            {
+                answerNum: 3, answer: "&ltscript href=\"xxx.js\"&gt",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            }
+        ]
+    },
+    {
+        question: "The external JavaScript file must contain the &ltscript&gt tag.",
+        answers:
+        [
+            {
+                answerNum: 1, answer: "False",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            },
+            {
+                answerNum: 2, answer: "True",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            }
+        ]
+    },
+    {
+        question: "How do you write \"Hello World\" in an alert box?",
+        answers:
+        [
+            {
+                answerNum: 1, answer: "msg(\"Hello World\");",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 2, answer: "alert(\"Hello World\");",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            },
+            {
+                answerNum: 3, answer: "alertBox(\"Hello World\");",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 4, answer: "msgBox(\"Hello World\");",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            }
+        ]
+    },
+    {
+        question: "How do you create a function in Javascript?",
+        answers:
+        [
+            {
+                answerNum: 1, answer: "function = myFunction()",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 2, answer: "function myFunction()",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            },
+            {
+                answerNum: 3, answer: "function:myFunction()",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            }
+        ]
+    },
+    {
+        question: "How do you call a function named \"myFunction\"",
+        answers:
+        [
+            {
+                answerNum: 1, answer: "call function myFunction()",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 2, answer: "call myFunction()",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(false);
+                }
+            },
+            {
+                answerNum: 3, answer: "myFunction()",
+                answerFunction: function()
+                {
+                    answerBtnClickCallBack(true);
+                }
+            }
+        ]
+    }
+];
 
-//timer function
+
+//TODO: timer function
 function setTime(){
     var timerInterval = setInterval(function(){
 
     }, 1000)
 }
 
-//renderQuizListItems function
-function renderQuizListItems(){
-    //delete any li elements currently displayed
+function deleteQuestionListItems(){
 
-    //iterate through properties in current arrQuizQuestions object
+    //if quizList has any children then delete them
+    if(quizList.hasChildNodes){
+        
+        //iterate through quizList ul childnodes
+        while (quizList.firstChild){
+            //remove current childnode from quizList ul
+            quizList.removeChild(quizList.lastChild);
+        }
 
-    //create li element
-    
-    //create button element
-
-    //add bootstrap class to button
-
-    //add text to button
-
-    //add function to button click event listener
-
-    //add button to li element
-    
+    }
+        
 }
 
-//function called after clicking a quiz answer button
-function quizAnswerClick(answer){
-    //if answer to current arrQuizQuestions is correct
+//renderQuizListItems function
+function renderQuizListItems(){
+    
+    //get current question object in arrQuizQuestions object array
+    var objQuestion = arrQuizQuestions[currentQuizQuestion];
 
-        //score = score + 100 + time;
+    //add objQuestion.question to questionH2
+    questionH2.innerHTML = objQuestion.question;
 
-        //flashAnswerFeedback(true);
+    for (let i = 0; i < objQuestion.answers.length; i++) {
+        //create object variable for current answer
+        var objAnswer = objQuestion.answers[i];
+        
+        //create li element
+        var li = document.createElement("li");
+
+        //add bootstrap class to li element
+        li.className = "list-group-item";
+
+        //create button element
+        var btn = document.createElement("button");
+
+        //add bootstrap class to button
+        btn.className = "btn btn-primary";
+        
+        //declare variables to store answer values
+        var answerNum = objAnswer.answerNum;
+        var answer = objAnswer.answer;
+        var answerFunction = objAnswer.answerFunction;
+       
+        //add text to button
+        btn.innerHTML = answerNum + " " + answer;
+        
+        //add function to button click event listener
+        btn.addEventListener("click", answerFunction);
+        
+        //add button to li element
+        li.appendChild(btn);
+        
+        //add li element to ul element
+        quizList.appendChild(li);
+    }
             
-    //else 
+}
 
-        //flashAnswerFeedback(false);
+function answerBtnClickCallBack(answerTruth){
+    
+    //if answer to current arrQuizQuestions is correct
+    if(answerTruth)
+    {
+        //add to score;
+        score = score + 100 + secondsLeft;
+    }
+    
+    //call function that shows answer feedback container
+    flashAnswerFeedback(answerTruth);
 
-    //currentQuizQuestion++;
+    //reset secondsLeft for next question
+    secondsLeft = 60;
+    
+    //increment quiz quesiton
+    currentQuizQuestion++;
+    
+    //end game if last question is completed
+    if (currentQuizQuestion >= arrQuizQuestions.length){
+        //TODO: hide quizContainer
 
-    //secondsLeft = 60;
+        //TODO: show gameEndContainer
+    }
+    //otherwise, load the next question
+    else{
+        
+        //delete all li elements from ul element
+        deleteQuestionListItems();
 
-    //if currentQuizQuestion === 25 then
+        //load next question and answer
+        renderQuizListItems();
+    }
 
-        //hide quizContainer
-
-        //show gameEndContainer
-
-    //else
-
-        //renderQuizListItems();
 }
 
 //flash answer feedback function
 function flashAnswerFeedback(correctFalse){
+    
+    //amound of time feedback appears
+    var flashDuration = 1;
+
+    //modify text of answerFeedback p element
+    if(correctFalse){
+        answerFeedback.innerHTML = "Correct!";
+    }
+    else{
+        answerFeedback.innerHTML = "Wrong!";
+    }
+
+    //show answerFeedback p element
+    answerFeedback.className = "text-muted display-4 d-block";
+
+    //set timer interval
     var timerInterval = setInterval(function(){
+        
+        //decrement flashDuration
+        flashDuration--;
+
+        //Stop timer and hide answerFeedback p element after 2 seconds
+        if(flashDuration <= 0){
+            //stop timer
+            clearInterval(timerInterval);
+            //hide answerFeedack p element
+            answerFeedback.className = "text-muted display-4 d-none";
+        }
 
     },1000)
 }
@@ -94,10 +369,12 @@ startQuizBtn.addEventListener("click", function(event){
     event.preventDefault();
 
     //hide gameStartContainer
+    gameStartContainer.className = "container text-center d-none";
 
     //show quizContainer
+    quizContainer.className = "container text-center d-block";
 
-    //renderQuizListItems();
+    renderQuizListItems();
 
     //setTimeout();
 
