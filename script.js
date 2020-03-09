@@ -23,7 +23,7 @@ var currentQuizQuestion = 0;
 //track seconds left
 var secondsLeft = 60;
 //track score
-var score = 0;
+var currentScore = 0;
 
 //Declare quiz arrQuizQuestions object array
 var arrQuizQuestions = [
@@ -225,12 +225,35 @@ var arrQuizQuestions = [
     }
 ];
 
+//declare blank variable to hold high score objects
+var arrHighScores = [];
 
-//TODO: timer function
+//setTime function
 function setTime(){
-    var timerInterval = setInterval(function(){
+    
+    //start time remaining to 60 seconds
+    secondsLeft = 60;
+    //update timeSpan
+    timeSpan.innerHTML = secondsLeft;
 
-    }, 1000)
+    //start interval on 1 second
+    var timerInterval = setInterval(function(){
+        
+        //decrement seconds left per interval
+        secondsLeft--;
+       
+        //update timeSpan
+        timeSpan.innerHTML = secondsLeft;
+
+        if(secondsLeft <= 0){
+            //stop timer
+            clearInterval(timerInterval)
+
+            //go to next question
+            currentQuizQuestion++;
+            renderQuizListItems();
+        }
+    }, 1000);
 }
 
 function deleteQuestionListItems(){
@@ -251,6 +274,9 @@ function deleteQuestionListItems(){
 //renderQuizListItems function
 function renderQuizListItems(){
     
+    //delete all li elements from ul element
+    deleteQuestionListItems();
+
     //get current question object in arrQuizQuestions object array
     var objQuestion = arrQuizQuestions[currentQuizQuestion];
 
@@ -298,8 +324,8 @@ function answerBtnClickCallBack(answerTruth){
     //if answer to current arrQuizQuestions is correct
     if(answerTruth)
     {
-        //add to score;
-        score = score + 100 + secondsLeft;
+        //add to currentScore;
+        currentScore = currentScore + 100 + secondsLeft;
     }
     
     //call function that shows answer feedback container
@@ -313,16 +339,20 @@ function answerBtnClickCallBack(answerTruth){
     
     //end game if last question is completed
     if (currentQuizQuestion >= arrQuizQuestions.length){
-        //TODO: hide quizContainer
+        //hide quizContainer
+        quizContainer.className = "container text-center d-none";
 
-        //TODO: show gameEndContainer
+        //hide nav
+        nav.className = "container d-none";
+
+        //show gameEndContainer
+        gameEndContainer.className = "container text-center d-block";
+
+        //add currentScore to finalScoreSpan
+        finalScoreSpan.innerHTML = currentScore;
     }
     //otherwise, load the next question
-    else{
-        
-        //delete all li elements from ul element
-        deleteQuestionListItems();
-
+    else{      
         //load next question and answer
         renderQuizListItems();
     }
@@ -363,10 +393,57 @@ function flashAnswerFeedback(correctFalse){
     },1000)
 }
 
+function showHighScoreContainer(){
+    
+    //hide nav
+    nav.className = "container d-none";
+
+    //sort arrHighScores array by score
+
+    //remove all childnodes from highScoreList
+    while (highScoreList.firstChild){
+        //remove list item
+        highScoreList.removeChild(highScoreList.lastChild);
+    }
+
+    //iterate through arrHighScores array
+    for (var i = 0; i < arrHighScores.length; i++) {
+        
+        //create var for objHighScore.initials
+        var strInitials = arrHighScores[i].initials;
+        //create var for objHighScore.score
+        var strScore = arrHighScores[i].score;
+        
+        //create li element
+        var li = document.createElement("li");
+
+        //add strInitials + ":  " + strScore
+        li.textContent = strInitials + ":\t" + strScore;
+        
+        //add list-group-item-secondary class to li
+        li.className = "list-group-item-secondary";
+         
+        //appendChild li to highScoreList
+        highScoreList.appendChild(li);
+
+        //show highScoreContainer
+        highScoreContainer.className = "text-muted display-4 d-block";
+    }
+
+}
+
+function resetGameStats(){
+    currentScore = 0;
+    currentQuizQuestion = 0;
+}
+
 //start quiz button click event listener
 startQuizBtn.addEventListener("click", function(event){
     //prevent page refresh
     event.preventDefault();
+
+    //reset currentQuizQuestion and score
+    resetGameStats()
 
     //hide gameStartContainer
     gameStartContainer.className = "container text-center d-none";
@@ -376,6 +453,88 @@ startQuizBtn.addEventListener("click", function(event){
 
     renderQuizListItems();
 
-    //setTimeout();
+    //start timer
+    setTime();
 
+});
+
+//enterInitSubmitBtn click event listener
+gameEndForm.addEventListener("submit", function(event){
+    //prevent page refresh
+    event.preventDefault();
+
+    //create var with value of enterInitialsInput
+    var currentInitials = enterInitialsInput.value
+    
+    //validate enterInitialsInput
+    if(currentInitials){
+        
+        //create newHighScore object
+        var newHighScore = {
+            initials: currentInitials,
+            score: currentScore
+        };
+        
+        //add newHighScore object to arrHighScores
+        arrHighScores.push(newHighScore);
+        
+        //hide gameEndContainer
+        gameEndContainer.className = "container text-center d-none";
+
+        //call showHighScoreContainer
+        showHighScoreContainer();
+    }
+    else{
+        alert("Please enter your initials.")
+    }
+
+});
+
+//viewHighScores click event listener
+viewHighScores.addEventListener("click", function(event){
+    
+    //prevent page refesh
+    event.preventDefault();
+
+    //call showHighScoreContainer
+    showHighScoreContainer();
+
+});
+
+//highScoreBackBtn click event listener
+highScoreBackBtn.addEventListener("click", function(event){
+    //prevent page refresh
+    event.preventDefault();
+
+    //hide highScoreContainer
+    highScoreContainer.className = "container text-center d-none";
+
+    //show gameStartContainer
+    gameStartContainer.className = "container text-center d-block";
+
+    //show nav
+    nav.className = "container d-block";
+
+    //reset currentQuizQuestion and score
+    resetGameStats()
+
+    //call renderQuizListItems()
+    renderQuizListItems();
+
+    //Start timer
+    setTime();
+
+});
+
+//clearHighScores click event listener
+clearHighScores.addEventListener("click", function(event){
+    //prevent page refresh
+    event.preventDefault();
+    
+    //delete every item from arrHighScores
+    arrHighScores.length = 0;
+
+    //call showHighScoreContainer
+    showHighScoreContainer();
+        
 });
