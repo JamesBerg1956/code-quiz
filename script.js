@@ -230,11 +230,9 @@ var arrHighScores = [];
 
 //setTime function
 function setTime(){
-    
-    //start time remaining to 60 seconds
-    secondsLeft = 60;
-    //update timeSpan
-    timeSpan.innerHTML = secondsLeft;
+
+    //call resetTime function
+    resetTime();
 
     //start interval on 1 second
     var timerInterval = setInterval(function(){
@@ -273,9 +271,12 @@ function deleteQuestionListItems(){
 
 //renderQuizListItems function
 function renderQuizListItems(){
-    
+
     //delete all li elements from ul element
     deleteQuestionListItems();
+
+    //reset time
+    resetTime();
 
     //get current question object in arrQuizQuestions object array
     var objQuestion = arrQuizQuestions[currentQuizQuestion];
@@ -330,9 +331,6 @@ function answerBtnClickCallBack(answerTruth){
     
     //call function that shows answer feedback container
     flashAnswerFeedback(answerTruth);
-
-    //reset secondsLeft for next question
-    secondsLeft = 60;
     
     //increment quiz quesiton
     currentQuizQuestion++;
@@ -398,7 +396,11 @@ function showHighScoreContainer(){
     //hide nav
     nav.className = "container d-none";
 
-    //sort arrHighScores array by score
+    //hide quizContainer
+    quizContainer.className = "container text-center d-none";
+
+    //show highScoreContainer
+    highScoreContainer.className = "container text-center d-block";
 
     //remove all childnodes from highScoreList
     while (highScoreList.firstChild){
@@ -426,15 +428,22 @@ function showHighScoreContainer(){
         //appendChild li to highScoreList
         highScoreList.appendChild(li);
 
-        //show highScoreContainer
-        highScoreContainer.className = "text-muted display-4 d-block";
     }
 
 }
 
 function resetGameStats(){
+    //set score to 0
     currentScore = 0;
+    //resets quiz question
     currentQuizQuestion = 0;
+}
+
+function resetTime(){
+    //start time remaining to 60 seconds
+    secondsLeft = 60;
+    //update timeSpan
+    timeSpan.innerHTML = secondsLeft;
 }
 
 //start quiz button click event listener
@@ -451,10 +460,12 @@ startQuizBtn.addEventListener("click", function(event){
     //show quizContainer
     quizContainer.className = "container text-center d-block";
 
-    renderQuizListItems();
+    //show nav
+    nav.className = "container d-block";
 
-    //start timer
-    setTime();
+    setTime()
+
+    renderQuizListItems();
 
 });
 
@@ -520,9 +531,6 @@ highScoreBackBtn.addEventListener("click", function(event){
 
     //call renderQuizListItems()
     renderQuizListItems();
-
-    //Start timer
-    setTime();
 
 });
 
